@@ -79,7 +79,26 @@ If a session has a custom override configured, a **"Clear Override (Use Global D
 
 ---
 
-## Installation from Source
+## Installation
+
+### 🚀 One-Line Quick Install (Recommended)
+
+This repository includes a GitHub Actions workflow that automatically builds and deploys a minimal release to the `dist` branch (containing built artifacts and manifests without raw source bloat).
+
+You can install this plugin with a single command without any local build step:
+
+```sh
+dsh plugin --profile web add github:u9521/dsh-subagent-custom-model#dist
+```
+
+> **Note**: After installation, start or restart the Web service:
+> ```sh
+> dsh web
+> ```
+
+---
+
+## Installation from Source (For Developers)
 
 Follow the step-by-step instructions below to build and install this plugin from source into your DeepSeek Harness environment.
 

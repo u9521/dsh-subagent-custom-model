@@ -79,7 +79,26 @@
 
 ---
 
-## 从源码安装教程
+## 插件安装
+
+### 🚀 一行命令安装（推荐）
+
+本仓库已配置 GitHub Actions 自动构建最小发布分支（`dist` 分支包含完整编译产物与元数据，无多余源码与依赖）。
+
+直接运行以下命令即可一行安装，无需本地编译：
+
+```sh
+dsh plugin --profile web add github:u9521/dsh-subagent-custom-model#dist
+```
+
+> **提示**：安装完成后，启动或重启 Web 服务即可生效：
+> ```sh
+> dsh web
+> ```
+
+---
+
+## 从源码安装教程（开发者）
 
 以下是从源码构建并安装本插件到 DeepSeek Harness Web Profile 的完整步骤。
 

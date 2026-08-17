@@ -1,0 +1,74 @@
+name: Build and Deploy Release Branch
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Prevent race conditions when pushing to the dist branch
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build plugin
+        run: pnpm run build
+
+      - name: Deploy to dist branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Create a temporary staging directory
+          STAGE_DIR=$(mktemp -d)
+
+          # Copy required build artifacts and metadata
+          cp -r lib "$STAGE_DIR/"
+          cp cordis.patch.yml package.json README.md README.zh.md LICENSE "$STAGE_DIR/" 2>/dev/null || true
+
+          # Create a clean minimal .gitignore for the release branch
+          cat << 'EOF' > "$STAGE_DIR/.gitignore"
+          node_modules/
+          .DS_Store
+          *.log
+          EOF
+
+          # Switch to an orphan release branch
+          git checkout --orphan dist
+          git rm -rf . > /dev/null 2>&1 || true
+
+          # Move staged files into the root
+          cp -r "$STAGE_DIR"/* .
+          cp "$STAGE_DIR"/.gitignore .
+
+          # Commit and force push to dist branch
+          git add -A
+          git commit -m "release: build from ${GITHUB_SHA::7}"
+          git push origin HEAD:dist --force
