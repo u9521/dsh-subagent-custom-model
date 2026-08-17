@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { IconAgentPresetOutline16 } from '@deepseek-ai/dsh-client-ui-primitives'
 import * as i18n from './i18n.ts'
 import type { SubagentModelConfig } from '../types.ts'
 import { LOCALE_NS } from './types.ts'
@@ -10,7 +11,10 @@ const e = React.createElement
 export const inject = ['slots', 'connection', 'locale']
 
 const CSS = `
-/* Sidebar footer trigger */
+/* Sidebar footer trigger — dimensions mirror the settings trigger below it
+   (dsh-client-ui-settings-general .VOzbGW_trigger) so both entries align.
+   Multiple footer actions (e.g. the cordis-panel) coexist via the
+   .hHd-Xa_footerActions wrap rule at the end of this stylesheet. */
 .dsh-sam-trigger {
   align-items: center;
   background: 0 0;
@@ -26,9 +30,9 @@ const CSS = `
   gap: 8px;
   height: 34px;
   line-height: 22px;
-  margin: 2px -4px;
+  margin: 4px -4px;
   overflow: hidden;
-  padding: 6px 6px 6px 10px;
+  padding: 6px 2px 6px 10px;
   text-align: left;
   transition: background-color 0.15s;
   width: calc(100% + 8px);
@@ -36,12 +40,20 @@ const CSS = `
 .dsh-sam-trigger:hover {
   background: var(--dsw-alias-interactive-bg-hover);
 }
+/* Sidebar footer actions (e.g. the cordis-panel entry) are 100%-wide with
+   flex:none; wrap the row so multiple entries stack instead of pushing each
+   other out of the sidebar. Hash class from dsh-client-ui-sidebar (CSS
+   Modules) — if it changes in a product update, re-derive it from the
+   footerActions class map in that package's client bundle. */
+.hHd-Xa_footerActions {
+  flex-wrap: wrap;
+}
 .dsh-sam-trigger.rail {
   border-radius: 50%;
   gap: 0;
   height: 36px;
   justify-content: center;
-  margin: 4px 0;
+  margin: 8px 0 10px;
   padding: 0;
   width: 36px;
 }
@@ -54,7 +66,7 @@ const CSS = `
 }
 .dsh-sam-trigger-label {
   flex: 1;
-  font-size: 13px;
+  /* Inherit the trigger's 14px, like the settings trigger label */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -389,23 +401,6 @@ const CSS = `
 }
 `
 
-function BotSvg({ size = 16 }: { size?: number }) {
-  return e(
-    'svg',
-    {
-      viewBox: '0 0 16 16',
-      fill: 'none',
-      width: size,
-      height: size,
-      className: 'dsh-sam-svg',
-    },
-    e('path', {
-      d: 'M8 1a2 2 0 0 0-2 2H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2-2zm0 1.2a.8.8 0 0 1 .8.8h-1.6a.8.8 0 0 1 .8-.8zM4 4.2h8a.8.8 0 0 1 .8.8v6a.8.8 0 0 1-.8.8H4a.8.8 0 0 1-.8-.8V5a.8.8 0 0 1 .8-.8zm1.5 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-4 4a.6.6 0 0 0 0 1.2h3a.6.6 0 0 0 0-1.2h-3z',
-      fill: 'currentColor',
-    }),
-  )
-}
-
 type BadgeKind = 'custom' | 'default' | 'inherit'
 
 const BADGE_CLASS: Record<BadgeKind, string> = {
@@ -511,7 +506,7 @@ function SidebarSubagentTrigger(props: any) {
       e(
         'div',
         { className: 'dsh-sam-trigger-icon' },
-        e(BotSvg, { size: wide ? 15 : 18 }),
+        e(IconAgentPresetOutline16, { size: wide ? 16 : 18 }),
       ),
       wide
         ? e(
