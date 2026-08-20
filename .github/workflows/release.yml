@@ -49,15 +49,46 @@ jobs:
           # Create a temporary staging directory
           STAGE_DIR=$(mktemp -d)
 
-          # Copy required build artifacts and metadata
-          cp -r lib "$STAGE_DIR/"
-          cp cordis.patch.yml package.json README.md README.zh.md LICENSE "$STAGE_DIR/" 2>/dev/null || true
+          # Copy minimal runtime-required files only
+          mkdir -p "$STAGE_DIR/lib"
+          cp lib/index.js lib/client.js "$STAGE_DIR/lib/"
+          cp cordis.patch.yml LICENSE "$STAGE_DIR/"
 
-          # Create a clean minimal .gitignore for the release branch
-          cat << 'EOF' > "$STAGE_DIR/.gitignore"
-          node_modules/
-          .DS_Store
-          *.log
+          # Generate sanitized minimal package.json for runtime distribution
+          node -e '
+            const fs = require("fs");
+            const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+            delete pkg.scripts;
+            delete pkg.devDependencies;
+            delete pkg.types;
+            if (pkg.exports && pkg.exports["."]) {
+              pkg.exports["."] = "./lib/index.js";
+            }
+            pkg.files = ["lib", "cordis.patch.yml", "README.md", "LICENSE"];
+            fs.writeFileSync("'"$STAGE_DIR"'/package.json", JSON.stringify(pkg, null, 2) + "\n");
+          '
+
+          # Generate minimal README pointing to main GitHub repository
+          cat << 'EOF' > "$STAGE_DIR/README.md"
+          # dsh-subagent-custom-model (Release Branch)
+
+          Prebuilt runtime distribution artifacts for **[dsh-subagent-custom-model](https://github.com/u9521/dsh-subagent-custom-model)**.
+
+          ## 🚀 Quick Install
+
+          ```sh
+          dsh plugin --profile web add github:u9521/dsh-subagent-custom-model#dist
+          ```
+
+          ## 📖 Documentation & Source Code
+
+          For full documentation, usage instructions, source code, and issue tracker, please visit the main repository:
+
+          👉 **[https://github.com/u9521/dsh-subagent-custom-model](https://github.com/u9521/dsh-subagent-custom-model)**
+
+          ## 📄 License
+
+          [MIT License](LICENSE)
           EOF
 
           # Switch to an orphan release branch
@@ -66,7 +97,6 @@ jobs:
 
           # Move staged files into the root
           cp -r "$STAGE_DIR"/* .
-          cp "$STAGE_DIR"/.gitignore .
 
           # Commit and force push to dist branch
           git add -A

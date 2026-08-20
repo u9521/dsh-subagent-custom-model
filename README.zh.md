@@ -6,6 +6,8 @@
 
 支持在 Web 界面中为各个会话独立或全局统一配置子代理（包含 `subagent`、`subagent_fork`、`workflow` 等）调用的底层模型（Provider / Model）与推理思考等级（Reasoning Effort），修改后即时生效，无需重启服务。
 
+![插件界面截图](docs/pics/screenshot.png)
+
 ---
 
 ## 目录

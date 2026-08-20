@@ -6,6 +6,8 @@ English | [中文](README.zh.md)
 
 Configure language models (Provider / Model) and reasoning effort levels used by subagents (`subagent`, `subagent_fork`, `workflow`, etc.) per-session or globally directly from the Web GUI with immediate effect.
 
+![Plugin Screenshot](docs/pics/screenshot.png)
+
 ---
 
 ## Table of Contents
