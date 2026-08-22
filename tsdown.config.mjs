@@ -8,6 +8,6 @@
 const { clientBundle } =
   await import('./external/deepseek-harness/packages/client/tsdown.client.ts')
 
-export default clientBundle('@local/dsh-subagent-custom-model', [
+export default clientBundle('@local/dsh-session-settings', [
   'lib/types/index.js',
 ])

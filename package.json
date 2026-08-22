@@ -1,19 +1,19 @@
 {
-  "name": "@local/dsh-subagent-custom-model",
+  "name": "@local/dsh-session-settings",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Subagent custom model configuration plugin for DeepSeek Harness",
+  "description": "Session settings, MCP servers, and Skill management plugin for DeepSeek Harness (DSH) Web GUI.",
   "author": "u9521",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/u9521/dsh-subagent-custom-model.git"
+    "url": "git+https://github.com/u9521/dsh-session-settings.git"
   },
   "bugs": {
-    "url": "https://github.com/u9521/dsh-subagent-custom-model/issues"
+    "url": "https://github.com/u9521/dsh-session-settings/issues"
   },
-  "homepage": "https://github.com/u9521/dsh-subagent-custom-model#readme",
+  "homepage": "https://github.com/u9521/dsh-session-settings#readme",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
   "files": [

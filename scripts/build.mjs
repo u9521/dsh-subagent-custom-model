@@ -14,7 +14,7 @@
  * `--check` runs tsc --noEmit instead of emitting and bundling.
  */
 import { spawnSync } from 'node:child_process'
-import { mkdirSync } from 'node:fs'
+import { mkdirSync, rmSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -27,6 +27,9 @@ function run(command, args) {
   if (result.status !== 0) process.exit(result.status ?? 1)
 }
 
+if (!CHECK_ONLY) {
+  rmSync(join(root, 'lib'), { recursive: true, force: true })
+}
 mkdirSync(join(root, 'lib'), { recursive: true })
 const args = ['-p', 'tsconfig.json']
 if (CHECK_ONLY) args.push('--noEmit', '--pretty', 'false')
